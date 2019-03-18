@@ -1,0 +1,61 @@
+// 面试题11：旋转数组的最小数字
+// 题目：把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+// 输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如数组
+// {3, 4, 5, 1, 2}为{1, 2, 3, 4, 5}的一个旋转，该数组的最小值为1。
+
+#include<iostream>
+#include<exception>
+using namespace std;
+//三值相同时，顺序查找
+int search_min(int* array, int start, int end) {
+	int min = array[start];
+	for (int i = start; i <= end; i++) {
+		if (array[i] <= min)min = array[i];
+	}
+	return min;
+}
+//二分查找
+int Min(int* array, const int &length) {
+	if (array == nullptr || length <= 0) {
+		throw exception("invalid parameter");
+	}
+	int min = 0;
+	int start = 0, mid = 0, end = length - 1;
+	while (start <= end) {
+		//终止条件是start指向前递增数组最后一个，end指向后递增数组第一个
+		if ((end - start) <= 1) {
+			mid = end;
+			break;
+		}
+		mid = (start + end) / 2;
+		if (array[start] == array[mid] && array[mid] == array[end] ) {
+			min = search_min(array, start, end);
+			return min;
+		}
+		if (array[start] <= array[mid]) {
+			start = mid;
+		}
+		if (array[end] >= array[mid]) {
+			end = mid;
+		}
+	}
+	return array[mid];
+}
+
+int main() {
+	const int length = 1;
+	int test1[length] = { 1 };
+	//int test1[length] = { 3 };
+	//int* test1 = nullptr;
+	int min = 0;
+	//min = Min(test1, length);
+	try {
+		min = Min(test1, length);
+		cout << min << endl;
+	}
+	catch (exception &e) {
+		cout << e.what() << endl;
+	}
+
+	return 0;
+}
